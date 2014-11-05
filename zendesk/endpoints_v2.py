@@ -9,6 +9,10 @@ mapping_table = {
         'path': '/tickets.json',
         'method': 'GET',
     },
+    'list_recent_tickets': {
+        'path': '/tickets/recent.json',
+        'method': 'GET',
+    },
     'show_ticket': {
         'path': '/tickets/{{ticket_id}}.json',
         'method': 'GET',
@@ -35,10 +39,20 @@ mapping_table = {
         'path': '/tickets/{{ticket_id}}.json',
         'method': 'DELETE',
     },
+    'merge_ticket': {
+        'path': '/tickets/{{ticket_id}}/merge.json',
+        'valid_params': ['ids', 'target_comment', 'source_comment'],
+        'method': 'POST',
+    },
     'delete_many_tickets': {
-        'path': 'tickets/destroy_many.json',
+        'path': '/tickets/destroy_many.json',
         'valid_params': ['ids'],
         'method': 'DELETE',
+    },
+    'search_ticket': {
+        'path': '/tickets.json',
+        'valid_params': ['external_id', 'sort_by', 'sort_order'],
+        'method': 'GET',
     },
     'list_ticket_collaborators': {
         'path': '/tickets/{{ticket_id}}/collaborators.json',
@@ -49,14 +63,32 @@ mapping_table = {
         'method': 'GET',
     },
 
+    # Ticket Comments
+    'list_ticket_comments': {
+        'path': '/tickets/{{ticket_id}}/comments.json',
+        'method': 'GET',
+    },
+
     # Ticket Audits
     'list_audits': {
         'path': '/tickets/{{ticket_id}}/audits.json',
         'method': 'GET',
     },
     'mark_audit_as_trusted': {
-        'path': '/tickets/{{ticket_id}}/audits/{{audid_id}}/trust.json',
+        'path': '/tickets/{{ticket_id}}/audits/{{audit_id}}/trust.json',
         'method': 'PUT',
+    },
+
+    # Ticket Metrics
+    'list_metrics': {
+        'path': '/tickets/{{ticket_id}}/metrics.json',
+        'method': 'GET',
+    },
+
+    # Ticket Comments
+    'list_comments': {
+        'path': '/tickets/{{ticket_id}}/comments.json',
+        'method': 'GET',
     },
 
     # Incremental Tickets
@@ -87,7 +119,7 @@ mapping_table = {
         'path': '/ticket_fields/{{ticket_field_id}}.json',
         'method': 'DELETE',
     },
-    
+
     # Views
     'list_views': {
         'path': '/views.json',
@@ -99,6 +131,10 @@ mapping_table = {
     },
     'get_view': {
         'path': '/views/{{view_id}}.json',
+        'method': 'GET',
+    },
+    'get_view_tickets': {
+        'path': '/views/{{view_id}}/tickets.json',
         'method': 'GET',
     },
     'execute_view': {
@@ -118,6 +154,10 @@ mapping_table = {
         'path': '/views/{{view_id}}/count.json',
         'method': 'GET',
     },
+    'list_tickets_in_view': {
+        'path':'/views/{{view_id}}/tickets.json',
+        'method': 'GET',
+    },
 
     # Users
     'list_users': {
@@ -131,13 +171,18 @@ mapping_table = {
         'method': 'GET',
     },
     'list_users_in_organization': {
-        'path': '/organization/{{organization_id}}/users.json',
+        'path': '/organizations/{{organization_id}}/users.json',
         'valid_params': ('role','page'),
         'method': 'GET',
     },
     'show_user': {
         'path': '/users/{{user_id}}.json',
         'method': 'GET',
+    },
+    'show_many_users': {
+        'path': '/users/show_many.json',
+        'valid_params': ['ids'],
+        'method': 'POST',
     },
     'create_user': {
         'path': '/users.json',
@@ -162,6 +207,14 @@ mapping_table = {
     },
     'show_me': {
         'path': '/users/me.json',
+        'method': 'GET',
+    },
+    'list_user_requests': {
+        'path': '/users/{{user_id}}/tickets/requested.json',
+        'method': 'GET',
+    },
+    'list_user_ccd': {
+        'path': '/users/{{user_id}}/tickets/ccd.json',
         'method': 'GET',
     },
 
@@ -226,15 +279,15 @@ mapping_table = {
         'method': 'PUT',
     },
     'make_user_identity_primary': {
-        'path': '/users/{{user_id}}/identities/{{identity_id}}/make_primary',
+        'path': '/users/{{user_id}}/identities/{{identity_id}}/make_primary.json',
         'method': 'PUT',
     },
     'verify_user_identity': {
-        'path': '/users/{{user_id}}/identities/{{identity_id}}/verify',
+        'path': '/users/{{user_id}}/identities/{{identity_id}}/verify.json',
         'method': 'PUT',
     },
     'request_user_identity_verification': {
-        'path': '/users/{{user_id}}/identities/{{identity_id}}/request_verification',
+        'path': '/users/{{user_id}}/identities/{{identity_id}}/request_verification.json',
         'method': 'PUT',
     },
     'delete_user_identity': {
@@ -286,7 +339,7 @@ mapping_table = {
         'method': 'GET',
     },
     'list_assignable_memberships_for_group': {
-        'path': 'groups/{{groups_id}}/group_memberships/assignable.json',
+        'path': '/groups/{{groups_id}}/group_memberships/assignable.json',
         'method': 'GET',
     },
     'show_membership': {
@@ -329,10 +382,14 @@ mapping_table = {
         'path': '/organizations.json',
         'method': 'GET',
     },
+    'list_organization_tickets': {
+        'path': '/organizations/{{organization_id}}/tickets.json',
+        'method': 'GET',
+    },
     'autocomplete_organizations': {
         'path': '/organizations/autocomplete.json',
         'valid_params': ['name'],
-        'method': 'GET',
+        'method': 'POST',
     },
     'show_organization': {
         'path': '/organizations/{{organization_id}}.json',
@@ -350,11 +407,38 @@ mapping_table = {
         'path': '/organizations/{{organization_id}}.json',
         'method': 'DELETE',
     },
+    'search_organization': {
+        'path': '/organizations/search.json',
+        'valid_params': ['query', 'external_id'],
+        'method': 'GET',
+    },
+
+    # Organization Fields
+    'list_organization_fields': {
+        'path': '/organization_fields.json',
+        'method': 'GET',
+    },
+    'show_organization_field': {
+        'path': '/organization_fields/{{organization_field_id}}.json',
+        'method': 'GET',
+    },
+    'create_organization_field': {
+        'path': '/organization_fields.json',
+        'method': 'POST',
+    },
+    'update_organization_field': {
+        'path': '/organization_fields/{{organization_field_id}}.json',
+        'method': 'PUT',
+    },
+    'delete_organization_field': {
+        'path': '/organization_fields/{{organization_field_id}}.json',
+        'method': 'DELETE',
+    },
 
     # Search
     'search': {
         'path': '/search.json',
-        'valid_params': ['query'],
+        'valid_params': ['query', 'sort_by', 'sort_order'],
         'method': 'GET',
     },
     'anonymous_search': {
@@ -374,8 +458,8 @@ mapping_table = {
         'path': '/forums.json',
         'method': 'GET',
     },
-    'list_forums_catagory': {
-        'path': '/catagories/{{catagory_id}}/forums.json',
+    'list_forums_category': {
+        'path': '/categories/{{category_id}}/forums.json',
         'method': 'GET',
     },
     'show_forum': {
@@ -401,7 +485,7 @@ mapping_table = {
         'method': 'GET',
     },
     'list_forum_subscriptions_for_forum': {
-        'path': '/forum/{{forum_id}}/subscriptions.json',
+        'path': '/forums/{{forum_id}}/subscriptions.json',
         'method': 'GET',
     },
     'show_forum_subscription': {
@@ -473,14 +557,14 @@ mapping_table = {
         'path': '/topics/{{topic_id}}.json',
         'method': 'DELETE',
     },
-    
+
     # Topic Comments
     'list_topic_comments': {
         'path': '/topics/{{topic_id}}/comments.json',
         'method': 'GET',
     },
     'list_topic_comments_for_user': {
-        'path': '/users/{{user_id}}/top_comments.json',
+        'path': '/users/{{user_id}}/topic_comments.json',
         'method': 'GET',
     },
     'show_topic_comment': {
@@ -510,7 +594,7 @@ mapping_table = {
         'method': 'GET',
     },
     'list_subscriptions_for_topic': {
-        'path': '/topic/{{topic_id}}/subscriptions.json',
+        'path': '/topics/{{topic_id}}/subscriptions.json',
         'method': 'GET',
     },
     'show_topic_subscription': {
@@ -532,7 +616,7 @@ mapping_table = {
         'method': 'GET',
     },
     'list_topic_votes_for_user': {
-        'path': '/user/{{user_id}}/topic_votes.json',
+        'path': '/users/{{user_id}}/topic_votes.json',
         'method': 'GET',
     },
     'show_topic_vote': {
@@ -568,6 +652,8 @@ mapping_table = {
     'upload_attachment': {
         'path': '/uploads.json',
         'method': 'POST',
+        'content': 'application/binary',
+        'valid_params': ['filename', 'token'],
     },
 
     # Job Statuses
@@ -662,6 +748,7 @@ mapping_table = {
 # Patch mapping table with correct HTTP Status expected
 for method, api_map in mapping_table.iteritems():
     status = 200
-    if method.startswith('create_'):
+    if (method.startswith('create_') and not method.startswith('create_many_')
+        or method == 'upload_attachment'):
         status = 201
     api_map['status'] = status
